@@ -30,8 +30,10 @@
                                                                componentsJoinedByString: @"_"]];
         if (![[NSFileManager defaultManager] fileExistsAtPath: savePath])
         {
+#ifdef DEBUG
             NSLog(@"Creating file");
-            [[[NSFileManager alloc] init] createFileAtPath: savePath 
+#endif
+            [[[NSFileManager alloc] init] createFileAtPath: savePath
                                                   contents: [[NSData alloc] init] 
                                                 attributes: [[NSDictionary alloc] init]];
         }
@@ -82,7 +84,9 @@
 
 - (void) connection:(NSURLConnection*)connection didReceiveData:(NSData *)data
 {
+#ifdef DEBUG
     NSLog(@"*");
+#endif
     [_fileHandle writeData: data];
     [_fileHandle synchronizeFile];
 }

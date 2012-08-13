@@ -116,16 +116,23 @@
 
 - (void) operation: (BNOperation*) operation didSaveFileAt: (NSString*) path
 {
+#ifdef DEBUG
     NSLog(@"File saved!");
+#endif
     [self sendActionsForControlEvents: BNEventDownloadedPicture];
     [_imagePaths addObject: path];
+    // @MAYBE add @synchronized on _currentImageNumber
     if (_currentImageNumber >= 0) {
         // We've already launched banner show.
         return;
     }
+#ifdef DEBUG
     NSLog(@"current is: %d", _currentImageNumber);
+#endif
     _currentImageNumber = 0;
+#ifdef DEBUG
     NSLog(@"changed current is: %d", _currentImageNumber);
+#endif
     [_mainImageView setImage: [UIImage imageWithContentsOfFile: path]];
     [UIView animateWithDuration: 0.5 animations:^{
         [self setHidden: NO];
@@ -141,10 +148,12 @@
 {
     [self setCurrentImageNumber: _currentImageNumber + 1];
     NSInteger nextImageIndex = _currentImageNumber % [_imagePaths count];
+#ifdef DEBUG
     NSLog(@"Next image will be at %d", nextImageIndex);
     if ([UIImage imageWithContentsOfFile: [_imagePaths objectAtIndex: nextImageIndex]] == nil) {
-        NSLog(@"NIL!");
+        NSLog(@"Image wasn't loaded correctly!");
     }
+#endif
     [UIView animateWithDuration: 0.5 animations:^{
         [_mainImageView setImage: nil];
         [_mainImageView 
